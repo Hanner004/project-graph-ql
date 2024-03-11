@@ -21,18 +21,18 @@ export class PostsResolver {
     return await this.postsService.findAll();
   }
 
-  //   @Query(() => Post, { name: 'post' })
-  //   findOne(@Args('id', { type: () => Int }) id: number) {
-  //     return this.postsService.findOne(id);
-  //   }
+  @Query(() => Post, { name: 'post' })
+  async findOne(@Args('id', { type: () => Int }) id: number) {
+    return await this.postsService.findOne(id);
+  }
 
-  //   @Mutation(() => Post)
-  //   updatePost(@Args('updatePostInput') updatePostInput: UpdatePostInput) {
-  //     return this.postsService.update(updatePostInput.id, updatePostInput);
-  //   }
+  @Mutation(() => Post)
+  async updatePost(@Args('updatePostInput') updatePostInput: UpdatePostInput) {
+    return await this.postsService.update(updatePostInput);
+  }
 
-  //   @Mutation(() => Post)
-  //   removePost(@Args('id', { type: () => Int }) id: number) {
-  //     return this.postsService.remove(id);
-  //   }
+  @Mutation(() => String)
+  async removePost(@Args('id', { type: () => Int }) id: number) {
+    return await this.postsService.remove(id);
+  }
 }

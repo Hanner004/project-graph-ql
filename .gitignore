@@ -5,6 +5,8 @@
 /src/database.sqlite
 /src/schema.gql
 
+package-lock.json
+
 # Logs
 logs
 *.log
