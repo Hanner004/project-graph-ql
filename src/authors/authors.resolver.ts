@@ -1,8 +1,17 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  Int,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 
 import { AuthorsService } from './authors.service';
 
 import { Author } from './entities/author.entity';
+import { Post } from '../posts/entities/post.entity';
 
 import { CreateAuthorInput } from './dto/create-author.input';
 import { UpdateAuthorInput } from './dto/update-author.input';
@@ -38,5 +47,10 @@ export class AuthorsResolver {
   @Mutation(() => String)
   async removeAuthor(@Args('id', { type: () => Int }) id: number) {
     return await this.authorsService.remove(id);
+  }
+
+  @ResolveField(() => [Post])
+  async posts(@Parent() author: Author) {
+    return await this.authorsService.getPostsByAuthorId(author.id);
   }
 }

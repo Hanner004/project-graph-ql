@@ -1,8 +1,17 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  Int,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 
 import { PostsService } from './posts.service';
 
 import { Post } from './entities/post.entity';
+import { Author } from '../authors/entities/author.entity';
 
 import { CreatePostInput } from './dto/create-post.input';
 import { UpdatePostInput } from './dto/update-post.input';
@@ -34,5 +43,10 @@ export class PostsResolver {
   @Mutation(() => String)
   async removePost(@Args('id', { type: () => Int }) id: number) {
     return await this.postsService.remove(id);
+  }
+
+  @ResolveField(() => Author)
+  async author(@Parent() post: Post): Promise<Author> {
+    return await this.postsService.getAuthorByPostId(post.id);
   }
 }

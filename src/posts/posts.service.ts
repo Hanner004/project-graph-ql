@@ -14,9 +14,21 @@ export class PostsService {
     @InjectRepository(Post) private postRepository: Repository<Post>,
   ) {}
 
-  async create(createPostInput: CreatePostInput): Promise<Post> {
-    const newPost = this.postRepository.create(createPostInput);
+  async create({
+    authorId,
+    ...createPostInput
+  }: CreatePostInput): Promise<Post> {
+    const newPost = this.postRepository.create({
+      ...createPostInput,
+      author: { id: authorId },
+    });
     return await this.postRepository.save(newPost);
+  }
+
+  async findAllByAuthor(authorId: number): Promise<Post[]> {
+    return await this.postRepository.find({
+      where: { author: { id: authorId } },
+    });
   }
 
   async findAll(): Promise<Post[]> {
@@ -45,5 +57,14 @@ export class PostsService {
 
     await this.postRepository.remove(postFound);
     return 'Post removed successfully';
+  }
+
+  async getAuthorByPostId(postId: number) {
+    const postFound = await this.postRepository.findOne({
+      where: { id: postId },
+      relations: { author: true },
+    });
+
+    return postFound.author;
   }
 }

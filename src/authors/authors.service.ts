@@ -15,7 +15,10 @@ export class AuthorsService {
   ) {}
 
   async create(createAuthorInput: CreateAuthorInput): Promise<Author> {
-    const newAuthor = this.authorRepository.create(createAuthorInput);
+    const newAuthor = this.authorRepository.create({
+      ...createAuthorInput,
+      posts: [],
+    });
     return await this.authorRepository.save(newAuthor);
   }
 
@@ -48,5 +51,14 @@ export class AuthorsService {
 
     await this.authorRepository.remove(authorFound);
     return 'Author removed successfully';
+  }
+
+  async getPostsByAuthorId(authorId: number) {
+    const authorFound = await this.authorRepository.findOne({
+      where: { id: authorId },
+      relations: { posts: true },
+    });
+
+    return authorFound.posts;
   }
 }
